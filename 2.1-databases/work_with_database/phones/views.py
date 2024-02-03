@@ -1,5 +1,6 @@
 from http.client import HTTPResponse
 
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 
 from phones.models import Phone
@@ -11,25 +12,27 @@ def index(request):
 
 def show_catalog(request):
     template = 'catalog.html'
-    # phone_obj = Phone.objects.all()
-    # context = {'phone.price': phone.price for phone in phone_obj}
-    # context = {'phone.price': phone.price for phone in Phone.price}
-    ob = Phone.objects.all()
-    context = {'phone.name':phone.name for phone in ob}
+    phones_all = Phone.objects.all
+    name = request.GET.get('name')
+    context = {'phones': phones_all,
+                'name': name,}
+    return render(request, template, context)
+
+
+def show_sort_price(request):
+    template = 'catalog.html'
+    phones_all = Phone.objects.all
+    name = request.GET.get('name')
+    context = {'phones': phones_all,
+                'name': name,}
     print(context)
     return render(request, template, context)
 
 
 def show_product(request, slug):
     template = 'product.html'
-    context = {}
+    phone = Phone.objects.filter(slug__contains=slug).first()
+    context = {'phone': phone}
     return render(request, template, context)
 
 
-def show_test(request):
-    template = 'catalog.html'
-    phone_obj = Phone.objects.all()
-    context = {phone.name for phone in phone_obj}
-    print(context)
-    return render(request, template, context)
-    # return HTTPResponse(context)
