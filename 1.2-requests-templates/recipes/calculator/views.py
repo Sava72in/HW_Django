@@ -1,4 +1,9 @@
+import os
+
+from django.http import HttpResponse
 from django.shortcuts import render
+
+from recipes.settings import BASE_DIR
 
 DATA = {
     'omlet': {
@@ -19,12 +24,38 @@ DATA = {
     # можете добавить свои рецепты ;)
 }
 
-# Напишите ваш обработчик. Используйте DATA как источник данных
-# Результат - render(request, 'calculator/index.html', context)
-# В качестве контекста должен быть передан словарь с рецептом:
-# context = {
-#   'recipe': {
-#     'ингредиент1': количество1,
-#     'ингредиент2': количество2,
-#   }
-# }
+
+def omlet(request):
+    template = 'index.html'
+    recipe = {'recipe': DATA['omlet']}
+    if request.GET.get('count') is not None:
+        c = request.GET.get('count')
+        dict_ing = {}
+        for ing, count in DATA['omlet'].items():
+            dict_ing[ing] = float(count) * int(c)
+        recipe = {'recipe': dict_ing}
+    return render(request, template, recipe)
+
+
+def pasta(request):
+    template = 'index.html'
+    recipe = {'recipe': DATA['pasta']}
+    if request.GET.get('count') is not None:
+        c = request.GET.get('count')
+        dict_ing = {}
+        for ing, count in DATA['pasta'].items():
+            dict_ing[ing] = float(count) * int(c)
+        recipe = {'recipe': dict_ing}
+    return render(request, template, recipe)
+
+
+def buter(request):
+    template = 'index.html'
+    recipe = {'recipe': DATA['buter']}
+    if request.GET.get('count') is not None:
+        c = request.GET.get('count')
+        dict_ing = {}
+        for ing, count in DATA['buter'].items():
+            dict_ing[ing] = float(count) * int(c)
+        recipe = {'recipe': dict_ing}
+    return render(request, template, recipe)

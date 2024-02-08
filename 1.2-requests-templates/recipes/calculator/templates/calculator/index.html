@@ -5,6 +5,13 @@
     <title>Рецепты</title>
 </head>
 <body>
+<form>
+  <label>Кол-во порций</label>
+      <input type="text" id="amount" placeholder="1" onchange="location.href='?count='+document.getElementById('amount').value">
+        <a href=""> Рассчитать</a>
+</form>
+
+<p>ДЛЯ ПРИГОТОВЛЕНИЯ НЕОБХОДИМО:</p>
 {% for ingredient, amount in recipe.items %}
     <p>{{ ingredient }}: {{ amount }}</p>
 {% empty %}

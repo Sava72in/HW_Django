@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 
 from phones.models import Phone
-
+Paginator
 
 def index(request):
     return redirect('catalog')
