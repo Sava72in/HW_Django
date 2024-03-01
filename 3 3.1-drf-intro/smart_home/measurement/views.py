@@ -1,39 +1,33 @@
-# TODO: опишите необходимые обработчики, рекомендуется использовать generics APIView классы:
-# TODO: ListCreateAPIView, RetrieveUpdateAPIView, CreateAPIView
-from rest_framework.decorators import api_view
-from rest_framework.generics import ListAPIView, RetrieveAPIView, UpdateAPIView
+# опишите необходимые обработчики, рекомендуется использовать generics APIView классы:
+# ListCreateAPIView, RetrieveUpdateAPIView, CreateAPIView
+from rest_framework import status
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, ListAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from measurement.models import Sensor, Temperature_measurement
-from .serializers import SensorSerializer, TempSerializer
+from .models import Sensor ,Temperature_measurement
+from .serializers import SensorSerializer, MeasurementSerializer, SensorDetailSerializer
 
 
-class Get_temp(ListAPIView):
+class SensorListView(ListAPIView):
     queryset = Sensor.objects.all()
     serializer_class = SensorSerializer
 
     def post(self, request):
-        name = self.request.GET.get('name')
-        descriptions = self.request.GET.get('descriptions')
-        Sensor(name=name, descriptions=descriptions).save()
-        return Response({'status': 'OK'})
+        serializer = SensorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class Sensor_View(RetrieveAPIView):
+class SensorRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Sensor.objects.all()
-    serializer_class = SensorSerializer
+    serializer_class = SensorDetailSerializer
 
 
-class Modify_sensor(UpdateAPIView):
-    queryset = Sensor.objects.all()
-    serializer_class = SensorSerializer
-
-
-class Modify_data(UpdateAPIView):
-    queryset = Temperature_measurement.objects.all()
-    serializer_class = TempSerializer
-
-
-
-
+class MeasurementListCreateView(ListCreateAPIView):
+    def post(self, request):
+        serializer = MeasurementSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
